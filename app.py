@@ -13,6 +13,8 @@ from qreader import QReader
 import cv2
 
 
+qr_url="http://192.168.1.141:5000/doc/"
+
 qreader = QReader()
 
 
@@ -68,7 +70,7 @@ def qr_code_olustur(veri):
         box_size=10,
         border=4,
     )
-    qr.add_data(veri)
+    qr.add_data(qr_url+veri)
     qr.make(fit=True)
     qr_img = qr.make_image(fill_color="black", back_color="white")
     qr_img.save("./qr/"+veri+ ".png")
@@ -88,11 +90,6 @@ def read_excell(file_name):
         else:
             values[list(ref_json.keys())[i]]=deger
     return values
-
-
-
-
-
 
 
 
@@ -193,6 +190,11 @@ def upload_file():
             return redirect(url_for("doc",file_name=decoded_text[0]))
 
     
+
+@app.route('/qr', methods=['GET', 'POST'])
+def qr_print():
+    return render_template('qr.html',qr_path="qr/"+request.form.get('qr_code')+".png")
+
 
 if __name__ == '__main__':
 

@@ -196,9 +196,7 @@ def qr_print():
     return render_template('qr.html',qr_path="qr/"+request.form.get('qr_code')+".png")
 
 
-if __name__ == '__main__':
 
-    app.run(debug=True,host="0.0.0.0",port=5001)
 
 
 

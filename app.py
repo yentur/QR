@@ -8,7 +8,7 @@ import random
 import string
 import qrcode
 import datetime
-from werkzeug.utils import secure_filename
+#from werkzeug.utils import secure_filename
 from qreader import QReader
 import cv2
 

@@ -1,5 +1,9 @@
+pyzbar
 flask
 qrcode
 qreader
-cv2
+opencv-python
 werkzeug
+gunicorn
+openpyxl
+

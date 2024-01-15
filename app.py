@@ -13,7 +13,7 @@ from qreader import QReader
 import cv2
 
 
-qr_url="http://192.168.1.141:5000/doc/"
+qr_url=" https://qr-deneme.onrender.com/doc/"
 
 qreader = QReader()
 
@@ -198,7 +198,7 @@ def qr_print():
 
 if __name__ == '__main__':
 
-    app.run(debug=True,host="0.0.0.0")
+    app.run(debug=True,host="0.0.0.0",port=5001)
 
 
 

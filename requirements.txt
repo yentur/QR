@@ -5,3 +5,4 @@ opencv-python
 werkzeug
 gunicorn
 openpyxl
+zbar

@@ -1,3 +1,4 @@
+zbar
 flask
 qrcode
 qreader
@@ -5,4 +6,4 @@ opencv-python
 werkzeug
 gunicorn
 openpyxl
-zbar
+

@@ -1,4 +1,4 @@
-zbar
+pyzbar
 flask
 qrcode
 qreader

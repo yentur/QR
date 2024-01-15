@@ -4,3 +4,4 @@ qreader
 opencv-python
 werkzeug
 gunicorn
+openpyxl

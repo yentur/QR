@@ -3,3 +3,4 @@ qrcode
 qreader
 opencv-python
 werkzeug
+gunicorn

@@ -15,10 +15,10 @@ import cv2
 
 qr_url=" https://qr-deneme.onrender.com/doc/"
 
-qreader = QReader()
+# qreader = QReader()
 
 
-detector = cv2.QRCodeDetector()
+# detector = cv2.QRCodeDetector()
 app = Flask(__name__,static_folder="./static",template_folder="./templates")
 
 
@@ -185,9 +185,8 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             image =cv2.cvtColor(cv2.imread(os.path.join(app.config['UPLOAD_FOLDER'], filename)),cv2.COLOR_BGR2RGB)
-            decoded_text = qreader.detect_and_decode(image=image)
-            print(decoded_text[0])
-            return redirect(url_for("doc",file_name=decoded_text[0]))
+            # decoded_text = qreader.detect_and_decode(image=image)
+            return redirect(url_for("doc",file_name="decoded_text[0]"))
 
     
 

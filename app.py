@@ -8,17 +8,14 @@ import random
 import string
 import qrcode
 import datetime
-from werkzeug.utils import secure_filename
-from qreader import QReader
-import cv2
 
+# from werkzeug.utils import secure_filename
+
+# import cv2
 
 qr_url=" https://qr-deneme.onrender.com/doc/"
 
-# qreader = QReader()
 
-
-# detector = cv2.QRCodeDetector()
 app = Flask(__name__,static_folder="./static",template_folder="./templates")
 
 
@@ -171,24 +168,24 @@ def data():
     
 
 
-@app.route('/upload', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        print(request.files)
-        if 'file' not in request.files:
-            return "No file part"
-        file = request.files['file']
-        if file.filename == '':
-            return "No selected file"
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            image =cv2.cvtColor(cv2.imread(os.path.join(app.config['UPLOAD_FOLDER'], filename)),cv2.COLOR_BGR2RGB)
-            # decoded_text = qreader.detect_and_decode(image=image)
-            return redirect(url_for("doc",file_name="decoded_text[0]"))
+# @app.route('/upload', methods=['GET', 'POST'])
+# def upload_file():
+#     if request.method == 'POST':
+#         print(request.files)
+#         if 'file' not in request.files:
+#             return "No file part"
+#         file = request.files['file']
+#         if file.filename == '':
+#             return "No selected file"
+#         if file and allowed_file(file.filename):
+#             filename = secure_filename(file.filename)
+#             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+#             print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+#             image =cv2.cvtColor(cv2.imread(os.path.join(app.config['UPLOAD_FOLDER'], filename)),cv2.COLOR_BGR2RGB)
+#             # decoded_text = qreader.detect_and_decode(image=image)
+#             return redirect(url_for("doc",file_name="decoded_text[0]"))
 
-    
+
 
 @app.route('/qr', methods=['GET', 'POST'])
 def qr_print():

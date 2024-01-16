@@ -8,6 +8,12 @@ import random
 import string
 import qrcode
 import datetime
+<<<<<<< HEAD
+=======
+from werkzeug.utils import secure_filename
+#from qreader import QReader
+import cv2
+>>>>>>> c2ec9cbea8ea9a84df84c4d7c487f632bcd40346
 
 # from werkzeug.utils import secure_filename
 

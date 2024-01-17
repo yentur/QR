@@ -9,14 +9,6 @@ import string
 import qrcode
 import datetime
 
-#from qreader import QReader
-import cv2
-
-
-# from werkzeug.utils import secure_filename
-
-# import cv2
-
 qr_url=" https://qr-deneme.onrender.com/doc/"
 
 

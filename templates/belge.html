@@ -12,7 +12,7 @@
 
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
-    <title>Responsive Regisration Form </title>
+    <title> QR RAPORLAMA </title>
 </head>
 
 <body>
@@ -49,6 +49,20 @@
 
                 <div class="fields">
 
+                    <div class="input-field-f4">
+                        <label>Tersane</label>
+                        <input readonly type="text" value="{{ data.tersane }}" name="tersane">
+                    </div>
+
+                    <div class="input-field-f4">
+                        <label>Gemi</label>
+                        <input readonly type="text" value="{{ data.gemi }}" name="gemi">
+                    </div>
+
+                    <div class="input-field-f4">
+                        <label>Motor ismi</label>
+                        <input readonly type="text" value="{{ data.motor_name }}" name="motor_name">
+                    </div>
 
                     <div class="input-field-f4">
                         <label>İş No</label>
@@ -746,7 +760,7 @@
                         <td class="column-data" colspan="11">
                             <h1>DİĞER BİLGİLER</h1>
                             <input readonly type="text" style="width: 1000px; height: 100px;" name="diger_bilgiler"
-                                value="{{ data.gider_bilgiler}}">
+                                value="{{ data.diger_bilgiler}}">
                         </td>
                     </tr>
 

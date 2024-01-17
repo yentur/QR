@@ -1,58 +1,91 @@
 from flask import Flask, render_template,request,redirect,url_for
 import json
 import os
-import json
-import openpyxl
-import hashlib
-import random
-import string
 import qrcode
 import datetime
+import sqlite3
+import uuid
+import re
 
-qr_url=" https://qr-deneme.onrender.com/doc/"
+qr_url="http://192.168.1.141:8000/doc/"
 
+password="sb12"
 
 app = Flask(__name__,static_folder="./static",template_folder="./templates")
-
 
 UPLOAD_FOLDER = './uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png'}
 
+if not os.path.exists("./static/qr"):
+    os.mkdir("./static/qr")
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-with open("./static/.excel/ref.json","r") as file:
-    ref_json=json.load(file)
-
-
-def karsilastir_ve_olustur(dict1, dict2):
-    yeni_dict = {}
+def database_olustur():
+    if not "database.db" in os.listdir():
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+                    CREATE TABLE IF NOT EXISTS veri (
+                        id TEXT PRIMARY KEY,
+                        data TEXT,
+                        datetime TEXT
+                    )
+                ''')
+        conn.commit()
+        conn.close()
     
-    for anahtar in dict1:
-        if anahtar in dict2:
-            yeni_dict[dict1[anahtar]] = dict2[anahtar]
+
+
+
+def veri_ekle(_id, data):
+    date_time=str(datetime.datetime.now().strftime("%d/%m/%Y"))
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
     
-    return yeni_dict
+    existing_ids = [row[0] for row in cursor.execute("SELECT id FROM veri").fetchall()]
+    while _id in existing_ids:
+        _id += '_' + str(uuid.uuid4().hex)[:6]
+
+    cursor.execute("INSERT INTO veri (id, data, datetime) VALUES (?, ?, ?)", (_id, data, date_time))
+    conn.commit()
+    conn.close()
+
+    return _id
+
+def veri_oku(_id):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM veri WHERE id = ?",(_id,))
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
+
+def veri_guncelle(_id, data):
+    date_time=str(datetime.datetime.now().strftime("%d/%m/%Y"))
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute("UPDATE veri SET data = ?, datetime = ?  WHERE id = ?", (data,date_time,_id))
+    conn.commit()
+    conn.close()
+
+def colum_listele(name="id"):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    cursor.execute(f"SELECT {name} FROM veri")
+    id_listesi = [row for row in cursor.fetchall()]
+
+    conn.close()
+    return id_listesi
 
 
-def random_unique_filename(length=100):
-    
-    characters = string.ascii_letters + string.digits
 
-    random_string = ''.join(random.choice(characters) for _ in range(length))
-
-    sha1 = hashlib.sha1()
-    sha1.update(random_string.encode('utf-8'))
-    hash_value = sha1.hexdigest()
-
-    filename = hash_value 
-
-    return filename
 
 
 def qr_code_olustur(veri):
@@ -66,44 +99,7 @@ def qr_code_olustur(veri):
     qr.add_data(qr_url+veri)
     qr.make(fit=True)
     qr_img = qr.make_image(fill_color="black", back_color="white")
-    qr_img.save("./qr/"+veri+ ".png")
     qr_img.save("./static/qr/"+veri+ ".png")
-    
-
-
-def read_excell(file_name):
-    workbook = openpyxl.load_workbook(f'excel/{file_name}.xlsx')
-    sheet = workbook.active
-    cell=list(ref_json.values())
-    values={}
-    for i in range(len(cell)):
-        deger=sheet[cell[i]].value
-        if deger==None:
-            values[list(ref_json.keys())[i]]=""
-        else:
-            values[list(ref_json.keys())[i]]=deger
-    return values
-
-
-
-
-
-
-
-kaynak_excel = "./static/.excel/ref.xlsx"
-
-
-
-
-if not os.path.exists("./excel"):
-    os.mkdir("./excel")
-if not os.path.exists("./qr"):
-    os.mkdir("./qr")
-
-
-
-if not os.path.exists("./static/qr"):
-    os.mkdir("./static/qr")
 
 
 
@@ -113,83 +109,62 @@ def index():
     return render_template('mainpage.html')
 
 
-
 @app.route('/belge')
 def belge():
     return render_template('doc.html')
 
 
 
-
 @app.route('/list')
 def doc_list():
+    q=colum_listele("id,datetime")
     data=[]
-    for i in os.listdir("./excel/"):
-        data.append({"name":i.split(".")[0],"tarih":datetime.datetime.fromtimestamp(os.path.getctime("./excel/"+i)).strftime("%d/%m/%Y")})
-    return render_template('list.html', data=data)
+    for (_id,date_time) in q:
+        data.append({"name":_id,"tarih":date_time})
 
+    return render_template('list.html', data=data)
 
 
 
 @app.route('/doc/<file_name>',methods=['GET','POST'])
 def doc(file_name):
-    tarih=datetime.datetime.fromtimestamp(os.path.getctime("./excel/"+file_name+".xlsx")).strftime("%d/%m/%Y")
-    return render_template('belge.html',data=read_excell(file_name),doc_name=file_name,doc_tarih=tarih)
-
+    data=veri_oku(file_name)[0]
+    tarih=data[2]
+    json_data=json.loads(str(data[1]).replace("\'","\""))
+    return render_template('belge.html',data=json_data,doc_name=file_name,doc_tarih=tarih)
 
 
 
 @app.route('/data',methods=['GET','POST'])
 def data():
-
     request_data=request.form
-    if list(dict(request_data).values()).count('')<113:
-        kaynak_wb = openpyxl.load_workbook(kaynak_excel)
-        kaynak_ws = kaynak_wb.active
-        excel_data=karsilastir_ve_olustur(ref_json,request_data)
-        for i in excel_data:
-            kaynak_ws[i]=excel_data[i]
-
-        file_name=random_unique_filename()
-        file_names=os.listdir("./excel")
-        while (file_name in file_names):
-            file_name=random_unique_filename()
-
-        kaynak_wb.save("./excel/"+file_name+ ".xlsx")
-        kaynak_wb.close()
-        qr_code_olustur(file_name)
-        return redirect(url_for("doc",file_name=file_name))
+    tersane=request_data.get("tersane")
+    motor=request_data.get("motor_name")
+    gemi=request_data.get("gemi")
+    is_no=request_data.get("is_no")
+    file_name=f"{tersane}_{motor}_{gemi}_{is_no}"
+    file_name=uygun_url(file_name)
+    if request_data.get("password")==password:
+        if list(dict(request_data).values()).count('')<113:
+            _id=veri_ekle(_id=file_name,data=str(dict(request_data)))
+            qr_code_olustur(_id)
+            return redirect(url_for("doc",file_name=_id))
+        else:
+            return render_template('doc.html',data=None,doc_name=None,doc_tarih=None)
     else:
-        return render_template('doc.html',data=None,doc_name=None,doc_tarih=None)
-    
-
-
-# @app.route('/upload', methods=['GET', 'POST'])
-# def upload_file():
-#     if request.method == 'POST':
-#         print(request.files)
-#         if 'file' not in request.files:
-#             return "No file part"
-#         file = request.files['file']
-#         if file.filename == '':
-#             return "No selected file"
-#         if file and allowed_file(file.filename):
-#             filename = secure_filename(file.filename)
-#             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-#             print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-#             image =cv2.cvtColor(cv2.imread(os.path.join(app.config['UPLOAD_FOLDER'], filename)),cv2.COLOR_BGR2RGB)
-#             # decoded_text = qreader.detect_and_decode(image=image)
-#             return redirect(url_for("doc",file_name="decoded_text[0]"))
-
-
+        return "Sifre Yanlıs"
 
 @app.route('/qr', methods=['GET', 'POST'])
 def qr_print():
-    return render_template('qr.html',qr_path="qr/"+request.form.get('qr_code')+".png")
+    data=veri_oku(request.form.get('qr_code'))[0][1]
+    data=json.loads(str(data).replace("\'","\""))
+    return render_template('qr.html',qr_path="qr/"+request.form.get('qr_code')+".png",data=data)
 
 
+def uygun_url(string):
+    temizlenmis_string = re.sub(r'[^a-zA-Z0-9-_\.]', '', string)
+    return temizlenmis_string
 
-
-
-
-
+if __name__=="__main__":
+    database_olustur()
+    app.run(port=8000,debug=True,host="0.0.0.0")

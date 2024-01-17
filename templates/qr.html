@@ -5,15 +5,40 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/qr.css') }}">
     <title>Document</title>
 </head>
-<body onload="sayfayiYazdir()">
+<body onload="sayfayiYazdir()1">
     <div class="container">
+    <div class="card">
+        <div id="tersane">
+            TERSANE: {{data.tersane}}
+        </div>
+        <div id="qr-card">
+            <div id="gemi">
+                GEMİ: {{data.gemi}}
+            </div>
+        <div id="qr">
     <img src="{{ url_for('static', filename=qr_path) }}" alt="">
-    <h1> GEMİ ADI</h1>
+</div>
+    
+
+    
+
+
+    <div id="motor">
+        MOTOR: {{data.motor_name}}
+    </div>
+
+</div>
+
+    
+    <div id="logo">
+        <img src="{{ url_for('static', filename="images/logo.png") }}" alt="">
+        </div>
+    </div>
 </div>
     <script>
         function sayfayiYazdir() {
             window.print();
-        }
+        } 
     </script>
 </body>
 </html>

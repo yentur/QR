@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Coding By CodingNepal - codingnepalweb.com -->
+
 <html lang="en">
 
 <head>
@@ -13,27 +13,13 @@
     <!----===== Iconscout CSS ===== -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
-    <title>Responsive Regisration Form </title>
+    <title>QR RAPORLAMA </title>
 </head>
-
 <body>
-
-
-
 
 <section class="container cd-table-container">
   <h2 class="cd-title">Search Table Record:</h2>
 <div class="container">
-  <form action="/upload"  method="post" enctype="multipart/form-data">
-    <div class="file-drop-zone" id="file-drop-zone">
-        Sürükle ve bırak veya buraya tıkla
-    </div>
-    <input type="file" name="file" id="file-input" style="display: none;">
-
-    <button class="sumbit" type="submit">
-        <span class="btnText">ARA</span>
-        <i class="uil uil-navigator"></i>
-    </button>
 
 </form>
 </div>
@@ -106,44 +92,6 @@
   
 
 
-
-
-<script>
- const fileDropZone = document.getElementById('file-drop-zone');
-    const fileInput = document.getElementById('file-input');
-
-
-    fileDropZone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        fileDropZone.classList.add('dragover');
-    });
-
-    fileDropZone.addEventListener('dragleave', () => {
-        fileDropZone.classList.remove('dragover');
-    });
-
-    fileDropZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        fileDropZone.classList.remove('dragover');
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            fileInput.files = files;
-            fileDropZone.textContent = `Seçilen dosya: ${files[0].name}`;
-        }
-    });
-
-    // Dosya girişi seçme işlemi için tıklanabilir öğeyi dinleyiciye ekleyin
-    fileDropZone.addEventListener('click', () => {
-        fileInput.click();
-    });
-
-    // Dosya girişi değiştiğinde (örneğin, dosya seçildiğinde) bu olayı dinleyin
-    fileInput.addEventListener('change', () => {
-        if (fileInput.files.length > 0) {
-            fileDropZone.textContent = `Seçilen dosya: ${fileInput.files[0].name}`;
-        }
-    });
-</script>
 </body>
 
 </html>

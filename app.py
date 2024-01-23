@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request,redirect,url_for
+from flask import Flask, render_template,request,redirect,url_for,send_file
 import json
 import os
 import qrcode
@@ -6,10 +6,29 @@ import datetime
 import sqlite3
 import uuid
 import re
+import shutil
+
+from functools import wraps
+from flask import make_response, current_app
+
+username="saygibakim"
+password="saygi12"
 
 qr_url="http://192.168.1.141:8000/doc/"
 
-password="sb12"
+def auth_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if auth and auth.username == username  and auth.password == password:
+            return f(*args, **kwargs)
+        return make_response("<h1>Access denied!</h1>", 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
+
+    return decorated
+
+
+
+
 
 app = Flask(__name__,static_folder="./static",template_folder="./templates")
 
@@ -85,7 +104,12 @@ def colum_listele(name="id"):
     return id_listesi
 
 
-
+def veri_sil(_id):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM veri WHERE id = ?", (_id,))
+    conn.commit()
+    conn.close()
 
 
 def qr_code_olustur(veri):
@@ -105,17 +129,20 @@ def qr_code_olustur(veri):
 
 @app.route('/')
 @app.route('/main')
+@auth_required
 def index():
     return render_template('mainpage.html')
 
 
 @app.route('/belge')
+@auth_required
 def belge():
     return render_template('doc.html')
 
 
 
 @app.route('/list')
+@auth_required
 def doc_list():
     q=colum_listele("id,datetime")
     data=[]
@@ -144,15 +171,13 @@ def data():
     is_no=request_data.get("is_no")
     file_name=f"{tersane}_{motor}_{gemi}_{is_no}"
     file_name=uygun_url(file_name)
-    if request_data.get("password")==password:
-        if list(dict(request_data).values()).count('')<113:
-            _id=veri_ekle(_id=file_name,data=str(dict(request_data)))
-            qr_code_olustur(_id)
-            return redirect(url_for("doc",file_name=_id))
-        else:
-            return render_template('doc.html',data=None,doc_name=None,doc_tarih=None)
+    if list(dict(request_data).values()).count('')<113:
+        _id=veri_ekle(_id=file_name,data=str(dict(request_data)))
+        qr_code_olustur(_id)
+        return redirect(url_for(f"doc_upload",file_name=file_name))
     else:
-        return "Sifre Yanlıs"
+        return render_template('doc.html',data=None,doc_name=None,doc_tarih=None)
+
 
 @app.route('/qr', methods=['GET', 'POST'])
 def qr_print():
@@ -165,6 +190,64 @@ def uygun_url(string):
     temizlenmis_string = re.sub(r'[^a-zA-Z0-9-_\.]', '', string)
     return temizlenmis_string
 
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    _id=request.form.get("_id")
+    path_name=f"static/uploads/{_id}"
+    if not os.path.exists(path_name):
+        os.mkdir(path_name)
+    if 'file' not in request.files:
+        return 'No file part'
+    
+    file = request.files['file']
+
+    if file.filename == '':
+        return 'No selected file'
+
+    file.save(path_name + "/" +file.filename)
+    return 'File uploaded successfully'
+
+
+
+@app.route('/doc_upload/<file_name>',methods=['GET','POST'])
+def doc_upload(file_name):
+    return render_template('doc_upload.html',_id=file_name)
+
+
+
+@app.route('/doc_show/<file_name>',methods=['GET','POST'])
+def doc_show(file_name):
+    path_id=f"static/uploads/{file_name}"
+    if not os.path.exists(path_id):
+         return render_template('doc_show.html', doc_list=[],_id=file_name)
+    doc_lists=[]
+    for i in os.listdir(path_id):
+        path_file=f"uploads/{file_name}"+"/"+i
+        doc_lists.append(path_file)
+    return render_template('doc_show.html', doc_list=doc_lists,_id=file_name)
+
+@app.route('/download',methods=['GET','POST'])
+def download():
+    file_name=list(request.form)[0]
+    file_name=file_name.replace("..","")
+    return send_file(file_name, as_attachment=True)
+
+
+
+
+@app.route('/delete/<file_name>',methods=['GET','POST'])
+def delete(file_name):
+    path_id=f"static/uploads/{file_name}"
+    if os.path.exists(path_id):
+        shutil.rmtree(path=path_id)
+    veri_sil(file_name)
+    return redirect(url_for("doc_list"))
+
+
+
 if __name__=="__main__":
     database_olustur()
     app.run(port=8000,debug=True,host="0.0.0.0")
+
+

@@ -38,6 +38,12 @@
         <tr  onclick="window.location.href='doc/{{ row.name }}';">
             <td>{{ row.name }}</td>
             <td>{{ row.tarih }}</td>
+            <td>
+                <a href="../delete/{{row.name}}" class="custom-btn btn-2" type="submit">
+                <span class="btnText">Sil</span>
+
+                </a>
+            </td>
         </tr>
     {% endfor %}
     </tbody>

@@ -14,14 +14,11 @@
 body {
     margin: 0;
     padding: 0;
+    
 }
 
 .container {
-    max-width: 1080px;
-    width: 100%;
     border-radius: 16px;
-    padding: 30px;
-    margin: 0 15px;
     background-color: #fff;
 }
 
@@ -395,13 +392,11 @@ select {
 
 
 .table-field input {
-    width: 75px;
+    width: 100%;
 }
 
 
-.table-field input {
-    width: 75px;
-}
+
 
 
 
@@ -411,12 +406,14 @@ select {
     color: #fff;
     text-align: center;
     padding: 5px;
+    width: 100%;
 
 }
 
 .column-data {
     border: 2px solid #ddd;
     padding: 5px;
+    width: 100%;
 
 }
 
@@ -426,10 +423,8 @@ select {
     display: flex;
     align-items: center;
     border-radius: 10px;
-    height: 300px;
     width: 600px;
    
-
 }
 .qr_id h1{
     font-size: x-large;
@@ -439,8 +434,14 @@ select {
     display: flex;
     justify-content: space-around;
     align-self: center;
-    height: 370px;
+
 }
 
+.btnText{
+    display: none;
+}
+.uil uil-navigator{
+    display: none;
+}
 
 }

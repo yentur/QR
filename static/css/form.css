@@ -65,6 +65,7 @@ body {
     position: absolute;
     background-color: #fff;
     transition: 0.3s ease;
+    width: 100%;
 }
 
 .container .container2  form .form.second {
@@ -426,13 +427,10 @@ select {
 
 
 .table-field input {
-    width: 75px;
+    width: 100%;
 }
 
 
-.table-field input {
-    width: 75px;
-}
 
 
 
@@ -442,12 +440,14 @@ select {
     color: #fff;
     text-align: center;
     padding: 5px;
+    width: 100%;
 
 }
 
 .column-data {
     border: 2px solid #ddd;
     padding: 5px;
+    width: 100%;
 
 }
 

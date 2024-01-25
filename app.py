@@ -14,7 +14,7 @@ from flask import make_response, current_app
 username="saygibakim"
 password="saygi12"
 
-qr_url="http://192.168.1.141:8000/doc/"
+qr_url="saygibakim.com/doc/"
 
 def auth_required(f):
     @wraps(f)
@@ -39,6 +39,10 @@ ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png'}
 
 if not os.path.exists("./static/qr"):
     os.mkdir("./static/qr")
+
+
+if not os.path.exists("./static/uploads"):
+    os.mkdir("./static/uploads")
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -145,10 +149,10 @@ def belge():
 @auth_required
 def doc_list():
     q=colum_listele("id,datetime")
+    q.reverse()
     data=[]
     for (_id,date_time) in q:
         data.append({"name":_id,"tarih":date_time})
-
     return render_template('list.html', data=data)
 
 
@@ -169,14 +173,15 @@ def data():
     motor=request_data.get("motor_name")
     gemi=request_data.get("gemi")
     is_no=request_data.get("is_no")
+    if is_no==None:
+        is_no=""
     file_name=f"{tersane}_{motor}_{gemi}_{is_no}"
     file_name=uygun_url(file_name)
-    if list(dict(request_data).values()).count('')<113:
-        _id=veri_ekle(_id=file_name,data=str(dict(request_data)))
-        qr_code_olustur(_id)
-        return redirect(url_for(f"doc_upload",file_name=file_name))
-    else:
-        return render_template('doc.html',data=None,doc_name=None,doc_tarih=None)
+
+    _id=veri_ekle(_id=file_name,data=str(dict(request_data)))
+    qr_code_olustur(_id)
+    return redirect(url_for(f"doc_upload",file_name=file_name))
+
 
 
 @app.route('/qr', methods=['GET', 'POST'])
@@ -195,7 +200,8 @@ def uygun_url(string):
 def upload():
     _id=request.form.get("_id")
     path_name=f"static/uploads/{_id}"
-    if not os.path.exists(path_name):
+    print(os.listdir("static/uploads"))
+    if not _id in os.listdir("static/uploads") :
         os.mkdir(path_name)
     if 'file' not in request.files:
         return 'No file part'
@@ -248,6 +254,6 @@ def delete(file_name):
 
 if __name__=="__main__":
     database_olustur()
-    app.run(port=8000,debug=True,host="0.0.0.0")
+    app.run(debug=True,host="0.0.0.0",port=None)
 
 

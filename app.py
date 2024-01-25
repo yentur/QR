@@ -246,14 +246,21 @@ def download():
 def delete(file_name):
     path_id=f"static/uploads/{file_name}"
     if os.path.exists(path_id):
-        shutil.rmtree(path=path_id)
-    veri_sil(file_name)
+        try:
+            shutil.rmtree(path=path_id)
+            veri_sil(file_name)
+            os.remove(f"static/qr/{file_name}.png")
+        except Exception as e:
+            print(e)
+            return "HATA OLUŞTU"
+
+    
     return redirect(url_for("doc_list"))
 
 
 
 if __name__=="__main__":
     database_olustur()
-    app.run(debug=True,host="0.0.0.0",port=None)
+    app.run(debug=True,host="0.0.0.0",port=8000)
 
 

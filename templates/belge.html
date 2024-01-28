@@ -19,8 +19,11 @@
     
     <div class="container">
         <div class="qr-header">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="">
         <div class="yazdir">
+        
         <button onclick="sayfayiYazdir()">BELGEYİ YAZDIR</button>
+        
         <form action="../qr" method="post" >
             <input readonly type="hidden" value={{doc_name}} name="qr_code">
             <button type="submit">QR YAZDIR</button>

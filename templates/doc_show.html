@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-
+    <link rel="shorcut icon" href="{{ url_for('static', filename='images/logo.png') }}">
     
     <link rel="stylesheet" href="{{ url_for('static', filename='css/doc_show.css') }}">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
@@ -26,7 +26,6 @@
         <a class="custom-btn btn-2" href="../doc/{{_id}}" onclick="this.parentNode.submit()" style="background: #fff; color: #000;" >
             <span class="btnText">GERİ </span>
         </a>
-
         {% for i in doc_list %}
             {% if i[-3:]=="mp4" %}
             <div class="card">
@@ -38,7 +37,7 @@
                 </video>
                <form action="../download" method="POST">
        
-                   <input type="hidden" name={{i}} value={{i}} />
+                   <input type="hidden" name={{url_for('static', filename = i)}} value={{url_for('static', filename = i)}} />
                    
                    <a class="custom-btn btn-2" href="#" onclick="this.parentNode.submit()">
                        <span class="btnText">İndir</span>
@@ -55,7 +54,7 @@
                     <img src=" {{url_for('static', filename = i)}}" alt="">
                     <form action="../download" method="POST">
             
-                        <input type="hidden" name={{i}} value={{i}} hidden/>
+                        <input type="hidden" name={{url_for('static', filename = i)}} value={{url_for('static', filename = i)}} hidden/>
                         
                         <a class="custom-btn btn-2" href="#" onclick="this.parentNode.submit()">
                             <span class="btnText">İndir</span>
@@ -73,7 +72,7 @@
                 <img src=" {{url_for('static', filename = "images/doc.png")}}" alt="">
                 <form action="../download" method="POST">
         
-                    <input type="hidden" name={{i}} value={{i}} hidden/>
+                    <input type="hidden" name={{url_for('static', filename = i)}} value={{url_for('static', filename = i)}} hidden/>
                     
                     <a class="custom-btn btn-2" href="#" onclick="this.parentNode.submit()">
                         <span class="btnText">İndir</span>

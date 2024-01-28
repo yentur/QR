@@ -420,11 +420,11 @@ select {
 
 .table-field input {
     width: 100%;
+    height: 100%;
+    border: none;
 }
 
-td{
-    width: 100%;
-}
+
 tr{
     width: 100%;
 }
@@ -443,7 +443,11 @@ tr{
 
 .column-data {
     border: 2px solid #ddd;
-    padding: 5px;
+    padding: 2px;
+    font-size: 14px;
+}
+
+table{
     width: 100%;
 }
 
@@ -471,7 +475,4 @@ tr{
 
 
 
-table{
-    width: 100%;
-}
 

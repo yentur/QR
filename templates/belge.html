@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
 
-
+    <link rel="shorcut icon" href="{{ url_for('static', filename='images/logo.png') }}">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/form2.css') }}">
@@ -18,12 +18,14 @@
 <body>
     
     <div class="container">
+        <div class="qr-header">
         <div class="yazdir">
         <button onclick="sayfayiYazdir()">BELGEYİ YAZDIR</button>
         <form action="../qr" method="post" >
             <input readonly type="hidden" value={{doc_name}} name="qr_code">
             <button type="submit">QR YAZDIR</button>
         </form>
+        
         <script>
             function sayfayiYazdir() {
                 window.print();
@@ -31,16 +33,15 @@
         </script>
 
         </div>
+        <img src="/static/qr/{{doc_name}}.png" alt="Görüntü" class="qr_code">
+    </div>
         <div class="container2">
-        <div class="info_box">
             <div class="qr_id">
                 <h1>
                     DOSYA ADI: {{doc_name}}  <br>
                     OLUŞTURULMA TARİHİ: {{doc_tarih}}
                 </h1>
             </div>
-            <img src="/static/qr/{{doc_name}}.png" alt="Görüntü" class="qr_code">
-        </div>
 
         <header>F14/1/1</header>
 
@@ -766,7 +767,6 @@
 
                 <button class="sumbit" type="submit">
                     <span class="btnText">DİĞER BELGELER</span>
-                    <i class="uil uil-navigator"></i>
                 </button>
                
 

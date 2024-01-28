@@ -7,23 +7,25 @@ import sqlite3
 import uuid
 import re
 import shutil
-
 from functools import wraps
 from flask import make_response, current_app
 
-username="saygibakim"
-password="saygi12"
+import hashlib
 
-qr_url="saygibakim.com/doc/"
+username="saygibakim"
+password="3de21a8567767bdff63e7f42ec6bdd292b8b228456899a09971b8e97f10cec1a"
+
+qr_url="78.189.49.109:8000/doc/"
 
 def auth_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         auth = request.authorization
-        if auth and auth.username == username  and auth.password == password:
-            return f(*args, **kwargs)
+        if auth and auth.username == username:
+            hashed_password = hashlib.sha256(auth.password.encode()).hexdigest()
+            if hashed_password == password:
+                return f(*args, **kwargs)
         return make_response("<h1>Access denied!</h1>", 401, {'WWW-Authenticate': 'Basic realm="Login required!"'})
-
     return decorated
 
 
@@ -211,7 +213,7 @@ def upload():
     if file.filename == '':
         return 'No selected file'
 
-    file.save(path_name + "/" +file.filename)
+    file.save(path_name + "/" +uygun_url(file.filename))
     return 'File uploaded successfully'
 
 
@@ -233,11 +235,15 @@ def doc_show(file_name):
         doc_lists.append(path_file)
     return render_template('doc_show.html', doc_list=doc_lists,_id=file_name)
 
+
+
 @app.route('/download',methods=['GET','POST'])
 def download():
     file_name=list(request.form)[0]
-    file_name=file_name.replace("..","")
-    return send_file(file_name, as_attachment=True)
+    _id=file_name.split("/")[-2]
+    _file=file_name.split("/")[-1]
+    file_path=f"static\\uploads\\{_id}\\{_file}"
+    return send_file(file_path, as_attachment=True)
 
 
 
@@ -247,15 +253,21 @@ def delete(file_name):
     path_id=f"static/uploads/{file_name}"
     if os.path.exists(path_id):
         try:
-            shutil.rmtree(path=path_id)
             veri_sil(file_name)
-            os.remove(f"static/qr/{file_name}.png")
+            try: 
+                shutil.rmtree(path=path_id)
+                
+            except:
+                pass
+            try: 
+                os.remove(f"static/qr/{file_name}.png")
+                
+            except:
+                pass
         except Exception as e:
             print(e)
             return "HATA OLUŞTU"
-
-    
-    return redirect(url_for("doc_list"))
+        return redirect(url_for("doc_list"))
 
 
 

@@ -20,42 +20,19 @@ body {
 }
 
 
-
 .container {
-
 
     max-width: 1080px;
     width: 100%;
     border-radius: 16px;
     padding: 30px;
-    margin: 0 15px;
     background-color: #fff;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
 
 
-
-.container .container2 header {
-
-    font-size: 20px;
-    font-weight: 600;
-    color: #333;
-}
-
-.container .container2 header::before {
-
-    left: 0;
-    bottom: -2px;
-    height: 3px;
-    width: 27px;
-    border-radius: 8px;
-    background-color: #4070f4;
-}
-
 .container .container2  form {
-
     position: relative;
-    margin-top: 16px;
     min-height: 2600px;
     background-color: #fff;
     overflow: hidden;
@@ -425,12 +402,16 @@ select {
 
 
 
-
 .table-field input {
     width: 100%;
+    height: 100%;
+    border: none;
 }
 
 
+tr{
+    width: 100%;
+}
 
 
 
@@ -446,20 +427,17 @@ select {
 
 .column-data {
     border: 2px solid #ddd;
-    padding: 5px;
-    width: 100%;
-
+    padding: 2px;
+    font-size: 14px;
 }
 
 
 .qr_id{
-    margin: 35px 0px;
     display: flex;
     align-items: center;
     border-radius: 10px;
-    height: 300px;
+    height: 100px;
     width: 600px;
-   
 
 }
 .qr_id h1{
@@ -473,18 +451,24 @@ select {
     height: 370px;
 }
 
+.qr-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+
 .yazdir button{
     display: flex;
     align-items: center;
     justify-content: center;
     height: 45px;
-    max-width: 200px;
     width: 100%;
     border: none;
     outline: none;
     color: #fff;
     border-radius: 5px;
-    margin: 25px 0;
+    margin-top: 25px;
     background-color: #4070f4;
     transition: all 0.3s linear;
     cursor: pointer;

@@ -251,23 +251,23 @@ def download():
 @app.route('/delete/<file_name>',methods=['GET','POST'])
 def delete(file_name):
     path_id=f"static/uploads/{file_name}"
-    if os.path.exists(path_id):
+    try:
+        veri_sil(file_name)
         try:
-            veri_sil(file_name)
-            try: 
+            if os.path.exists(path_id):
                 shutil.rmtree(path=path_id)
-                
-            except:
-                pass
-            try: 
-                os.remove(f"static/qr/{file_name}.png")
-                
-            except:
-                pass
-        except Exception as e:
-            print(e)
-            return "HATA OLUŞTU"
-        return redirect(url_for("doc_list"))
+            
+        except:
+            pass
+        try: 
+            os.remove(f"static/qr/{file_name}.png")
+            
+        except:
+            pass
+    except Exception as e:
+        print(e)
+        return "HATA OLUŞTU"
+    return redirect(url_for("doc_list"))
 
 
 

@@ -15,7 +15,7 @@ import hashlib
 username="saygibakim"
 password="3de21a8567767bdff63e7f42ec6bdd292b8b228456899a09971b8e97f10cec1a"
 
-qr_url="78.189.49.109:8000/doc/"
+qr_url="http://saygibakim.com:8000/doc/"
 
 def auth_required(f):
     @wraps(f)

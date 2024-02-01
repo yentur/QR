@@ -19,14 +19,76 @@
         <ul class="nav-links">
           <li><a href="#" onclick="window.location.href='/';">ANASAYFA</a></li>
           <li><a href="#" onclick="window.location.href='/belge';">BELGE OLUŞTUR</a></li>
-          <li><a href="#" onclick="window.location.href='/list';" >BELGE LİSTE</a></li>
+          <li><a href="#" onclick="window.location.href='/list';" >BELGELERİM</a></li>
         </ul>
-      </nav>
+    </nav>
 
 
-
-
-
+    <div class="container">
+      <div class="card">
+          <div class="face face1">
+              <div class="content">
+                  <div class="icon">
+                    <img src="{{ url_for('static', filename='images/qr_logo.svg') }}" alt="" style="height:300px;width:300px;">
+                  </div>
+              </div>
+          </div>
+          <div class="face face2">
+              <div class="content">
+                  <h3>
+                      <a href=""></a>
+                  </h3>
+                  <p>
+                    İlgili QR kodunu taratın.
+                    Sistem QR kodu analiz edip, madde bilgilerini getirir.
+                  </p>
+              </div>
+          </div>
+      </div>
+      <div class="card">
+          <div class="face face1">
+              <div class="content">
+                  <div class="icon">
+                    <img src="{{ url_for('static', filename='images/belge.png') }}" alt="" style="height:300px;width:300px;">
+                  </div>
+              </div>
+          </div>
+          <div class="face face2">
+              <div class="content">
+                  <h3>
+                      <a href="" ></a>
+                  </h3>
+                  <p>
+                    "Belge Oluştur" seçeneğine tıklayın.
+                    Gerekli bilgileri doldurun.
+                    Belgeyi kaydedin ve bir QR kodu oluşturun.
+                  </p>
+              </div>
+          </div>
+      </div>
+      <div class="card">
+          <div class="face face1">
+              <div class="content">
+                  <div class="icon">
+                       <img src="{{ url_for('static', filename='images/list.png') }}" alt="" style="height:300px;width:300px;">
+                  </div>
+              </div>
+          </div>
+          <div class="face face2">
+              <div class="content">
+                  <h3>
+                      <a href="" ></a>
+                  </h3>
+                  <p>
+                    "Belgelerim" bölümüne gidin.
+                    Oluşturulan belgeleri görüntüleyin, düzenleyin veya silin.
+                    İhtiyaca göre belgeleri kategorilere ayırarak listeleme yapın.
+                  </p>
+              </div>
+          </div>
+      </div>
+    </div>
+    
 
 
 

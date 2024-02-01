@@ -25,7 +25,7 @@
       <ul class="nav-links">
         <li><a href="#" onclick="window.location.href='/';">ANASAYFA</a></li>
         <li><a href="#" onclick="window.location.href='/belge';">BELGE OLUŞTUR</a></li>
-        <li><a href="#" onclick="window.location.href='/list';" >BELGE LİSTE</a></li>
+        <li><a href="#" onclick="window.location.href='/list';" >BELGELERİM</a></li>
       </ul>
     </nav>
 
@@ -53,6 +53,9 @@
         <a class="custom-btn btn-2" href="../edit/{{_id}}" onclick="this.parentNode.submit()" style="background: #fff; color: #000;" >
             <span class="btnText">GERİ </span>
         </a>
+        <a class="custom-btn btn-2" href="../doc/{{_id}}" onclick="this.parentNode.submit()" style="background: #fff; color: #000;" >
+          <span class="btnText">Bittir </span>
+      </a>
 
         {% for i in doc_list %}
             {% if i[-3:]=="mp4" %}

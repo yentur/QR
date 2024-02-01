@@ -133,7 +133,6 @@ def qr_code_olustur(veri):
 
 @app.route('/')
 @app.route('/main')
-@auth_required
 def index():
     return render_template('mainpage.html')
 

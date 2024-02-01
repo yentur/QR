@@ -8,7 +8,8 @@
 
 
     <link rel="shorcut icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    <link rel="stylesheet" href="static/css/table.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
 
     <!----===== Iconscout CSS ===== -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
@@ -16,6 +17,16 @@
     <title>QR RAPORLAMA </title>
 </head>
 <body>
+
+    <nav class="nav">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" style="height:100px;width:100px;">
+        <a href="#" class="logo">SAYGI BAKIM</a>
+        <ul class="nav-links">
+          <li><a href="#" onclick="window.location.href='/';">ANASAYFA</a></li>
+          <li><a href="#" onclick="window.location.href='/belge';">BELGE OLUŞTUR</a></li>
+          <li><a href="#" onclick="window.location.href='/list';" >BELGE LİSTE</a></li>
+        </ul>
+      </nav>
 
 <section class="container cd-table-container">
   <h2 class="cd-title">Search Table Record:</h2>
@@ -35,14 +46,18 @@
     </thead>
     <tbody>
         {% for row in data %}
-        <tr  onclick="window.location.href='doc/{{ row.name }}';">
-            <td>{{ row.name }}</td>
+        <tr>
+            <td onclick="window.location.href='doc/{{ row.name }}';">{{ row.name }}</td>
             <td>{{ row.tarih }}</td>
             <td>
-                <a href="../delete/{{row.name}}" class="custom-btn btn-2" type="submit">
+                <div class="op">
+                <a href="../delete/{{row.name}}" class="custom-btn btn-2 del" onclick="return confirm('Are you sure you want to delete {{ row.name }}?');" type="submit">
                 <span class="btnText">Sil</span>
+                <a href="../edit/{{row.name}}" class="custom-btn btn-2 edit" type="submit">
+                <span class="btnText">Düzenle</span>
 
                 </a>
+            </div>
             </td>
         </tr>
     {% endfor %}
@@ -92,6 +107,8 @@
 
             TableFilter.init();
         })();
+
+
 
     </script>
 

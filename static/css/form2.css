@@ -1,5 +1,10 @@
 @media print {
-    
+.nav{
+    display: none;
+}
+nav{
+    display: none;
+}
 .yazdir{
     display: none;
 }
@@ -7,6 +12,7 @@
 .btnText{
     display: none;
 }
+
 .uil uil-navigator{
     display: none;
 }
@@ -28,6 +34,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
     background: #4070f4;
 }
 

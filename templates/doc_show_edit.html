@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="shorcut icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/doc_show_edit.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+    
+
+    <title>QR RAPORLAMA </title>
+</head>
+
+<body>
+
+    <nav class="nav">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" style="height:100px;width:100px;">
+      <a href="#" class="logo">SAYGI BAKIM</a>
+      <ul class="nav-links">
+        <li><a href="#" onclick="window.location.href='/';">ANASAYFA</a></li>
+        <li><a href="#" onclick="window.location.href='/belge';">BELGE OLUŞTUR</a></li>
+        <li><a href="#" onclick="window.location.href='/list';" >BELGE LİSTE</a></li>
+      </ul>
+    </nav>
+
+    <div class="wrapper">
+        <header>File Uploader</header>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+          <input class="file-input" type="file" name="file" hidden>
+          <input readonly type="text" value="{{ _id}}" name="_id" hidden>
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p>Browse File to Upload</p>
+        </form>
+        <section class="progress-area"></section>
+        <section class="uploaded-area"></section>
+    
+        <a href="../editdoc/{{_id}}" class="custom-btn btn-2 tam" type="submit">
+            <span class="btnText">TAMAMLA</span>
+            <i class="uil uil-navigator"></i>
+    
+        </a>
+      </div>
+
+    <div class="container">
+        <h1> DİĞER BELGELER </h1>
+
+        <a class="custom-btn btn-2" href="../edit/{{_id}}" onclick="this.parentNode.submit()" style="background: #fff; color: #000;" >
+            <span class="btnText">GERİ </span>
+        </a>
+
+        {% for i in doc_list %}
+            {% if i[-3:]=="mp4" %}
+            <div class="card">
+                <h1>
+                   {{i.split("/")[-1]}}
+                </h1>   
+                <video controls >
+                    <source src="{{url_for('static', filename = i)}}" type="video/mp4">
+                </video>
+               <form action="../deletefile" method="POST">
+                   <input type="hidden" name="file_name" value={{_id}} hidden/>
+                   <input type="hidden" name="path" value={{url_for('static', filename = i)}} />
+                   
+                   <a class="custom-btn btn-2" href="#" onclick="if(confirm('Are you sure you want to delete {{i.split("/")[-1]}}?')) this.parentNode.submit();" style="background:#c70000">
+                    <span class="btnText">Sil</span>
+                </a>
+                   
+               </form>
+           </div>
+
+            {% elif i[-3:]=="png" or i[-3:]=="jpg" or i[-3:]=="jpeg"%}
+                    <div class="card">
+                        <h1>
+                        {{i.split("/")[-1]}}
+                        </h1>   
+                    <img src=" {{url_for('static', filename = i)}}" alt="">
+                    <form action="../deletefile" method="POST">
+                        <input type="hidden" name="file_name" value={{_id}} hidden/>
+                        <input type="hidden" name="path" value={{url_for('static', filename = i)}} hidden/>
+                        
+                        <a class="custom-btn btn-2" href="#" onclick="if(confirm('Are you sure you want to delete {{i.split("/")[-1]}}?')) this.parentNode.submit();" style="background:#c70000">
+                          <span class="btnText">Sil</span>
+                      </a>
+                        
+                    </form>
+                </div>
+
+           {% else %}
+
+                <div class="card">
+                    <h1>
+                    {{i.split("/")[-1]}}
+                    </h1>   
+                <img src=" {{url_for('static', filename = "images/doc.png")}}" alt="">
+                <form action="../deletefile" method="POST">
+                    <input type="hidden" name="file_name" value={{_id}} hidden/>
+                    <input type="hidden" name="path" value={{url_for('static', filename = i)}} hidden/>
+                    
+                    <a class="custom-btn btn-2" href="#" onclick="if(confirm('Are you sure you want to delete {{i.split("/")[-1]}}?')) this.parentNode.submit();" style="background:#c70000">
+                      <span class="btnText">Sil</span>
+                  </a>
+                    
+                </form>
+            </div>
+
+           {% endif %}
+        
+        {% endfor %}
+    </div>
+
+
+
+
+
+
+
+
+
+    <script>
+   
+        const form = document.querySelector("form"),
+        fileInput = document.querySelector(".file-input"),
+        progressArea = document.querySelector(".progress-area"),
+        uploadedArea = document.querySelector(".uploaded-area");
+        const _id="{{ _id }}"
+      form.addEventListener("click", () => {
+        fileInput.click();
+      });
+      
+      fileInput.onchange = ({ target }) => {
+        let file = target.files[0];
+        if (file) {
+          let fileName = file.name;
+          if (fileName.length >= 12) {
+            let splitName = fileName.split(".");
+            fileName = splitName[0].substring(0, 13) + "... ." + splitName[1];
+          }
+          uploadFile(file, fileName);
+        }
+      };
+      
+      function uploadFile(file, name) {
+          let formData = new FormData();
+          formData.append("file", file);
+          formData.append("_id", _id);
+        
+          fetch("/upload", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+        
+              return response.text();
+            })
+            .then((result) => {
+              console.log(result);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        
+        
+          let xhr = new XMLHttpRequest();
+          xhr.open("POST", "/upload");
+          xhr.upload.addEventListener("progress", ({loaded, total}) =>{
+            let fileLoaded = Math.floor((loaded / total) * 100);
+            let fileTotal = Math.floor(total / 1000);
+            let fileSize;
+            (fileTotal < 1024) ? fileSize = fileTotal + " KB" : fileSize = (loaded / (1024*1024)).toFixed(2) + " MB";
+            let progressHTML = `<li class="row">
+                                  <i class="fas fa-file-alt"></i>
+                                  <div class="content">
+                                    <div class="details">
+                                      <span class="name">${name} • Uploading</span>
+                                      <span class="percent">${fileLoaded}%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                      <div class="progress" style="width: ${fileLoaded}%"></div>
+                                    </div>
+                                  </div>
+                                </li>`;
+            uploadedArea.classList.add("onprogress");
+            progressArea.innerHTML = progressHTML;
+            if(loaded == total){
+              progressArea.innerHTML = "";
+              let uploadedHTML = `<li class="row">
+                                    <div class="content upload">
+                                      <i class="fas fa-file-alt"></i>
+                                      <div class="details">
+                                        <span class="name">${name} • Uploaded</span>
+                                        <span class="size">${fileSize}</span>
+                                      </div>
+                                    </div>
+                                    <i class="fas fa-check"></i>
+                                  </li>`;
+              uploadedArea.classList.remove("onprogress");
+              uploadedArea.insertAdjacentHTML("afterbegin", uploadedHTML);
+            }
+          });
+          let data = new FormData(form);
+          xhr.send(data);
+        }
+        
+      
+        </script>
+
+</body>
+
+</html>

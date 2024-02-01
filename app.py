@@ -30,8 +30,6 @@ def auth_required(f):
 
 
 
-
-
 app = Flask(__name__,static_folder="./static",template_folder="./templates")
 
 UPLOAD_FOLDER = './uploads'
@@ -169,17 +167,18 @@ def doc(file_name):
 
 
 @app.route('/data',methods=['GET','POST'])
+@auth_required
 def data():
     request_data=request.form
+    print("--------------"*10,request_data)
     tersane=request_data.get("tersane")
     motor=request_data.get("motor_name")
     gemi=request_data.get("gemi")
     is_no=request_data.get("is_no")
     if is_no==None:
         is_no=""
-    file_name=f"{tersane}_{motor}_{gemi}_{is_no}"
+    file_name=f"{tersane}_{gemi}_{motor}_{is_no}"
     file_name=uygun_url(file_name)
-
     _id=veri_ekle(_id=file_name,data=str(dict(request_data)))
     qr_code_olustur(_id)
     return redirect(url_for(f"doc_upload",file_name=file_name))
@@ -199,6 +198,7 @@ def uygun_url(string):
 
 
 @app.route('/upload', methods=['POST'])
+@auth_required
 def upload():
     _id=request.form.get("_id")
     path_name=f"static/uploads/{_id}"
@@ -249,6 +249,7 @@ def download():
 
 
 @app.route('/delete/<file_name>',methods=['GET','POST'])
+@auth_required
 def delete(file_name):
     path_id=f"static/uploads/{file_name}"
     try:
@@ -270,6 +271,61 @@ def delete(file_name):
     return redirect(url_for("doc_list"))
 
 
+@app.route('/edit/<file_name>',methods=['GET','POST'])
+@auth_required
+def edit(file_name):
+    data=veri_oku(file_name)[0]
+    json_data=json.loads(str(data[1]).replace("\'","\""))
+    print(json_data)
+    return render_template('doc_edit.html',data=json_data,doc_name=file_name)
+
+
+@app.route('/editdoc/<file_name>',methods=['GET','POST'])
+@auth_required
+def editdoc(file_name):
+    if request.method=="POST":
+        request_data=request.form
+        print("*******"*10,request_data)
+        try:
+            veri_sil(file_name)
+            os.remove(f"static/qr/{file_name}.png")
+            tersane=request_data.get("tersane")
+            motor=request_data.get("motor_name")
+            gemi=request_data.get("gemi")
+            is_no=request_data.get("is_no")
+            if is_no==None:
+                is_no=""
+            file_name=f"{tersane}_{gemi}_{motor}_{is_no}"
+            file_name=uygun_url(file_name)
+            _id=veri_ekle(_id=file_name,data=str(dict(request_data)))
+            qr_code_olustur(_id)
+        except Exception as e:
+            print(e)
+            return "Düzenleme sırasında hata oluştu"
+
+    path_id=f"static/uploads/{file_name}"
+    if not os.path.exists(path_id):
+         return render_template('doc_show_edit.html', doc_list=[],_id=file_name)
+    doc_lists=[]
+    for i in os.listdir(path_id):
+        path_file=f"uploads/{file_name}"+"/"+i
+        doc_lists.append(path_file)
+    return render_template('doc_show_edit.html', doc_list=doc_lists,_id=file_name)
+
+
+@app.route('/deletefile',methods=['GET','POST'])
+@auth_required
+def deletefile():
+    try:
+        file_path= request.form.get("path")
+        if file_path:
+            os.remove(file_path[1:])
+        
+    except Exception as e:
+        print(e)
+        return "Dosya Silinemedi"
+    file_name=request.form.get("file_name")
+    return redirect(url_for("editdoc",file_name=file_name))
 
 if __name__=="__main__":
     database_olustur()

@@ -6,27 +6,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shorcut icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    <link rel="stylesheet" href="static/css/style.css">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
     <title>Qr Raporlama</title>
 </head>
 
 <body>
-    <div class="wrapper">
+
+    <nav class="nav">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" style="height:100px;width:100px;">
+        <a href="#" class="logo">SAYGI BAKIM</a>
+        <ul class="nav-links">
+          <li><a href="#" onclick="window.location.href='/';">ANASAYFA</a></li>
+          <li><a href="#" onclick="window.location.href='/belge';">BELGE OLUŞTUR</a></li>
+          <li><a href="#" onclick="window.location.href='/list';" >BELGE LİSTE</a></li>
+        </ul>
+      </nav>
 
 
-        <div class="card-4">
-            <a class="custom-btn btn-2" href="belge" onclick="">
-                <h1 class="btnText">BELGE OLUŞTUR </h1>
-            </a>
-        </div>
 
-        <div class="card-4">
-            <a class="custom-btn btn-2" href="list" onclick="">
-                <h1 class="btnText">BELGELERİ LİSTELE</h1>
-            </a>
-        </div>
-    </div>
+
+
+
+
 
 </body>
 

@@ -7,10 +7,10 @@
     font-family: 'Poppins', sans-serif;
 }
 body{
-    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
     background: #4070f4;
 
 }
@@ -164,11 +164,14 @@ form .buttons button,
 }
 
 
-
+.op{
+    display: flex;
+    justify-content: center;
+}
 
 .custom-btn {
 
-    width: 100%;
+    width: 40%;
     height: 40px;
     color: #fff;
     border-radius: 5px;
@@ -206,4 +209,12 @@ form .buttons button,
       inset -4px -4px 6px 0 rgba(255,255,255,.2),
       inset 4px 4px 6px 0 rgba(0, 0, 0, .4);
   }
+
+  .del{
+    background: #c70000;
+  }
   
+  .edit{
+    margin-left: 10px;
+    background: #00e143;
+  }

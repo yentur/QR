@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <link rel="shorcut icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/doc_show.css') }}">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
@@ -18,7 +18,16 @@
 
 <body>
 
-
+    <nav class="nav">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" style="height:100px;width:100px;">
+        <a href="#" class="logo">SAYGI BAKIM</a>
+        <ul class="nav-links">
+          <li><a href="#" onclick="window.location.href='/';">ANASAYFA</a></li>
+          <li><a href="#" onclick="window.location.href='/belge';">BELGE OLUŞTUR</a></li>
+          <li><a href="#" onclick="window.location.href='/list';" >BELGE LİSTE</a></li>
+        </ul>
+      </nav>
+  
 
     <div class="container">
         <h1> DİĞER BELGELER </h1>

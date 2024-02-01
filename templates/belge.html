@@ -51,7 +51,8 @@
         <a class="custom-btn btn-2" href="../edit/{{doc_name}}">
             <span class="btnText">DÜZENLE </span>
         </a>
-        <a class="custom-btn btn-2 del" href="../delete/{{doc_name}}">
+        <a class="custom-btn btn-2 del" href="#" onclick="if(confirm('Are you sure you want to delete {{doc_name}}?')) window.location.href='../delete/{{doc_name}}'; return false;">
+            
             <span class="btnText">Sil </span>
         </a>
     </div>
